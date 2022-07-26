@@ -15,6 +15,9 @@ pip install alive-progress==1.0
 ```bash
 pip install termcolor
 ```
+```bash
+pip install pyfiglet==0.7
+```
 
 ## Usage
 ```bash

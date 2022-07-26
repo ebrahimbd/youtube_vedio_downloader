@@ -1,17 +1,19 @@
 from alive_progress import alive_bar
 from pytube import Playlist
 from termcolor import colored
-
-text = colored('Ebrahim free cracking youtube downloader!', 'red', attrs=['reverse', 'blink'])
-print(text)
+from pyfiglet import *
  
+# Here is some valid colors that we can use to color our art
+# valid_color = ('red', 'green', 'yellow', 'blue', 'cyan', 'white')
 
-
+ascii_art =figlet_format("Youtube free vedio Downloader ", font = "digital" )
+colored_ascii = colored(ascii_art, 'red')
+ascii_art1 =figlet_format("© 2022 Developed by Ebrahim Mohammad Saleh https://salehcv.web.app/", font = "digital" )
+colored_ascii1 = colored(ascii_art1, 'cyan')
+print(colored_ascii)
 
 
 # fuchsia = '\033[38;2;255;00;255m'   #  color as hex #FF00FF
-
- 
 
 i = 0
 error_call=0
@@ -31,6 +33,7 @@ while i < 2:
                                 var=var+1
                                 bar()
                     print("\nAll videos are downloaded.✅")
+                    print(colored_ascii1)
                 except:
                     call()
                     error_call=error_call+1
