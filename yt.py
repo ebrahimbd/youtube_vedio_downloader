@@ -44,7 +44,7 @@ while i < 2:
                         with alive_bar(bar='blocks', spinner='waves3') as bar: 
                                 print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
                                 # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
-                                video.streams.get_highest_resolution().download(yt_playlist.title)
+                                video.streams.get_highest_resolution().download(playlist_name)
                                 var=var+1
                                 bar()
                     print("\nAll videos are downloaded.✅")
