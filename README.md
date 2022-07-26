@@ -16,7 +16,14 @@ pip install alive-progress==1.0
 pip install termcolor
 ```
 
+
 ## Usage
+
+### Execute python script
+```bash
+python yt.py
+```
+### Input youtube playlist vedio url
 ```bash
 Download YouTube playlist? (yes or no, y/n) =  y
 Enter YouTube Playlist URL: https://www.youtubeerror_call.com/playlist?list=PLauivoElc3gimdmLcIIpafEkzGs4tCQmi
