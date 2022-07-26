@@ -1,3 +1,4 @@
+import os
 from alive_progress import alive_bar
 from pytube import Playlist
 from termcolor import colored
@@ -15,6 +16,15 @@ print(colored_ascii)
 
 # fuchsia = '\033[38;2;255;00;255m'   #  color as hex #FF00FF
 
+
+def create_file(name):
+    print(yt_playlist.title)
+    try:
+        os.mkdir(name)
+    except FileExistsError:
+        pass
+
+
 i = 0
 error_call=0
 while i < 2:
@@ -23,13 +33,18 @@ while i < 2:
         link = input("Enter YouTube Playlist URL: ")
         yt_playlist = Playlist(link)
         print("\nDownloading please wait .........") 
+        split_line = yt_playlist.title.split("/")
+        playlist_name = ' '.join(split_line )
+        create_file(playlist_name)
         def call():
                 try:
                     var=1
                     for video in yt_playlist.videos:
+                        pass
                         with alive_bar(bar='blocks', spinner='waves3') as bar: 
                                 print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
-                                video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
+                                # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
+                                video.streams.get_highest_resolution().download(yt_playlist.title)
                                 var=var+1
                                 bar()
                     print("\nAll videos are downloaded.✅")
