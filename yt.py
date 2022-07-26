@@ -1,8 +1,6 @@
-from operator import truediv
 from alive_progress import alive_bar
-import time
 from pytube import Playlist
-from termcolor import colored, cprint
+from termcolor import colored
 
 text = colored('Ebrahim free cracking youtube downloader!', 'red', attrs=['reverse', 'blink'])
 print(text)
