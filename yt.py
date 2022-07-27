@@ -1,6 +1,7 @@
 import os
+from pickle import TRUE
 from alive_progress import alive_bar
-from pytube import Playlist
+from pytube import Playlist, YouTube
 from termcolor import colored
 from pyfiglet import *
  
@@ -17,48 +18,30 @@ print(colored_ascii)
 # fuchsia = '\033[38;2;255;00;255m'   #  color as hex #FF00FF
 
 
-def create_file(name):
+def create_file(name, yt_playlist):
     print(yt_playlist.title)
     try:
         os.mkdir(name)
     except FileExistsError:
         pass
 
-
 i = 0
 error_call=0
+link=""
+is_single_vedio=False
+is_playlist=False
+is_error_vedio=False
+
+
 while i < 2:
     answer = input("Download YouTube playlist? (yes or no, y/n) =")
     if any(answer.lower() == f for f in ["yes", 'y',]):
-        link = input("Enter YouTube Playlist URL: ")
-        yt_playlist = Playlist(link)
-        print("\nDownloading please wait .........") 
-        split_line = yt_playlist.title.split("/")
-        playlist_name = ' '.join(split_line )
-        create_file(playlist_name)
-        def call():
-                try:
-                    var=1
-                    for video in yt_playlist.videos:
-                        pass
-                        with alive_bar(bar='blocks', spinner='waves3') as bar: 
-                                print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
-                                # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
-                                video.streams.get_highest_resolution().download(playlist_name)
-                                var=var+1
-                                bar()
-                    print("\nAll videos are downloaded.✅")
-                    print(colored_ascii1)
-                except:
-                    call()
-                    error_call=error_call+1
-                    if(error_call>=100):
-                        print("\nFailed Connection Error.............!!!!!!!!!")
-                        return
-        call()
+        is_playlist=True
+        link = input("Enter a Valid YouTube Playlist URL: ")
         break
     elif any(answer.lower() == f for f in ['no', 'n',]):
-        print('Single video download is not available right now')
+        link = input("Enter a Valid YouTube vedio URL: ")
+        is_single_vedio=True
         break
     else:
         i += 1
@@ -66,3 +49,64 @@ while i < 2:
             print('Please enter yes or no')
         else:
             print("Invalid answer Nothing done")
+
+
+def single_vedio():
+    global is_error_vedio
+    try:
+        video= YouTube(link)
+        video_get= YouTube(link).streams.filter(adaptive=True, file_extension='mp4').order_by('resolution').desc().first()
+        print("\nDownloading please wait .........") 
+        with alive_bar(bar='blocks', spinner='waves3') as bar: 
+            print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
+            video_get.download()
+            # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
+            bar()
+        print("\n Videos are downloaded.✅")
+        print(colored_ascii1)
+    except:
+        is_error_vedio=True
+
+
+
+def playlist_vedio():
+    global is_error_vedio
+    try:
+        yt_playlist = Playlist(link)
+        split_line = yt_playlist.title.split("/")
+        playlist_name = ' '.join(split_line )
+        create_file(playlist_name, yt_playlist)
+        print("\nDownloading please wait .........") 
+        for video in yt_playlist.videos:
+            with alive_bar(bar='blocks', spinner='waves3') as bar: 
+                    print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
+                    # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
+                    down=video.streams.filter(adaptive=True, file_extension='mp4').order_by('resolution').desc().first()
+                    down.download(playlist_name)
+                    bar()
+        print("\nAll videos are downloaded.✅")
+        print(colored_ascii1)
+    except:
+        is_error_vedio=True
+
+
+
+i=0
+while i<1000:
+    i=i+1
+    if is_error_vedio==False:
+        if i==2:
+            break
+    if i==999:
+        print("\nFailed invalid link or Connection Error.............!!!!!!!!!")
+    else:
+        if is_single_vedio:
+            single_vedio()
+        elif is_playlist:
+            playlist_vedio()
+
+
+    
+# pip install pyinstaller
+# cd /path/to/your/program
+# pyinstaller --onefile yourscript.py
