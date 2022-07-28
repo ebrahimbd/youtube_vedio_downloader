@@ -75,6 +75,7 @@ def single_vedio():
             bar()
         print("\n Videos are downloaded.✅")
         copyright()
+        is_error_vedio=False
     except:
         is_error_vedio=True
 
@@ -98,6 +99,7 @@ def playlist_vedio():
                     bar()
         print("\nAll videos are downloaded.✅")
         copyright()
+        is_error_vedio=False
     except:
         is_error_vedio=True
 
@@ -107,11 +109,11 @@ i=0
 while i<1000:
     i=i+1
     if is_error_vedio==False:
-        if i==2:
+        if i>=2:
             break
     if i==999:
-        
         print(colored("\nFailed invalid link or Connection Error.............!!", 'red'))
+        break
     else:
         if is_single_vedio:
             single_vedio()
