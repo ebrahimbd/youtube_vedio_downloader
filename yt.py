@@ -64,6 +64,7 @@ while i < 2:
 def single_vedio():
     global is_error_vedio
     try:
+        is_error_vedio=False
         video= YouTube(link)
         video_get= YouTube(link).streams.get_highest_resolution()
         print("\nPlease Wait Download Will Start Shortly .........") 
@@ -75,7 +76,6 @@ def single_vedio():
             bar()
         print("\n Videos are downloaded.✅")
         copyright()
-        is_error_vedio=False
     except:
         is_error_vedio=True
 
@@ -84,6 +84,7 @@ def single_vedio():
 def playlist_vedio():
     global is_error_vedio
     try:
+        is_error_vedio=False
         yt_playlist = Playlist(link)
         split_line = yt_playlist.title.split("/")
         print("\nPlease Wait Download Will Start Shortly .........") 
@@ -99,7 +100,6 @@ def playlist_vedio():
                     bar()
         print("\nAll videos are downloaded.✅")
         copyright()
-        is_error_vedio=False
     except:
         is_error_vedio=True
 
