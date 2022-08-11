@@ -4,6 +4,7 @@ from alive_progress import alive_bar
 from pytube import Playlist, YouTube
 from termcolor import colored
 from pyfiglet import *
+from pathvalidate import  replace_symbol, sanitize_filename
  
 # Here is some valid colors that we can use to color our art
 # valid_color = ('red', 'green', 'yellow', 'blue', 'cyan', 'white')
@@ -31,7 +32,8 @@ def copyright():
 def create_file(name, yt_playlist):
     print(yt_playlist.title)
     try:
-        os.mkdir(name)
+        valid_name=sanitize_filename(name)
+        os.mkdir(valid_name)
     except FileExistsError:
         pass
 
@@ -44,13 +46,16 @@ is_error_vedio=False
 
 
 while i < 2:
-    answer = input("Download YouTube playlist? (yes or no, y/n) =")
+    colored_ascii= colored("Download YouTube playlist? (yes or no, y/n) =", 'green')
+    answer = input(colored_ascii)
     if any(answer.lower() == f for f in ["yes", 'y',]):
         is_playlist=True
-        link = input("Enter a Valid YouTube Playlist URL: ")
+        colored_ascii= colored("Enter a Valid YouTube Playlist URL: ", 'green')
+        link = input(colored_ascii)
         break
     elif any(answer.lower() == f for f in ['no', 'n',]):
-        link = input("Enter a Valid YouTube vedio URL: ")
+        colored_ascii= colored("Enter a Valid YouTube vedio URL: ", 'green')
+        link = input(colored_ascii)
         is_single_vedio=True
         break
     else:
@@ -58,7 +63,8 @@ while i < 2:
         if i < 2:
             print('Please enter yes or no')
         else:
-            print("Invalid answer Nothing done")
+            colored_ascii= colored("Download YouTube playlist? (yes or no, y/n) =", 'red')
+            print(colored_ascii)
 
 
 def single_vedio():
@@ -69,7 +75,7 @@ def single_vedio():
         video_get= YouTube(link).streams.get_highest_resolution()
         print("\nPlease Wait Download Will Start Shortly .........") 
         # video_get= YouTube(link).streams.filter(adaptive=True, file_extension='mp4').order_by('resolution').desc().first()
-        with alive_bar(bar='blocks', spinner='waves3') as bar: 
+        with alive_bar(bar='blocks', spinner='pulse') as bar: 
             print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
             video_get.download()
             # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
@@ -86,17 +92,16 @@ def playlist_vedio():
     try:
         is_error_vedio=False
         yt_playlist = Playlist(link)
-        split_line = yt_playlist.title.split("/")
         print("\nPlease Wait Download Will Start Shortly .........") 
-        playlist_name = ' '.join(split_line )
-        create_file(playlist_name, yt_playlist)
+        valid_name=sanitize_filename(yt_playlist.title)
+        create_file(valid_name, yt_playlist)
         for video in yt_playlist.videos:
             with alive_bar(bar='blocks', spinner='waves3') as bar: 
                     print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
                     # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
                     # down=video.streams.filter(adaptive=True, file_extension='mp4').order_by('resolution').desc().first()
                     down=video.streams.get_highest_resolution()
-                    down.download(playlist_name)
+                    down.download(valid_name)
                     bar()
         print("\nAll videos are downloaded.✅")
         copyright()
@@ -112,7 +117,7 @@ while i<1000:
         if i>=2:
             break
     if i==999:
-        print(colored("\nFailed invalid link or Connection Error.............!!", 'red'))
+        print(colored("\nFailed invalid link or Connection timed out........!!", 'red'))
         break
     else:
         if is_single_vedio:
