@@ -1,1 +1,5 @@
-pip install pathvalidate
+alive_progress==1.0
+pathvalidate==2.5.1
+pyfiglet==0.7
+pytube==12.1.0
+termcolor==1.1.0

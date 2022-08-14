@@ -1,3 +1,5 @@
+#  pipreqs  --force
+
 import os
 from pickle import TRUE
 from alive_progress import alive_bar

@@ -2,13 +2,23 @@
 
 Pytube is a Python library for dealing with Youtube vedio free download.
 
+# Download
+```bash
+git clone https://github.com/ebrahimbd/youtube_vedio_downloader.git
+```
+
 ## Installation requirements
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
+
+
+
 ```bash
-pip install pytube
+pip install -r requirements.txt
 ```
+
+## or
 ```bash
 pip install alive-progress==1.0
 ```
@@ -24,8 +34,20 @@ pip install pyfiglet==0.7
 
 ### Execute python script
 ```bash
-python yt.py
+python3 yt.py
 ```
+or
+```bash
+sh run.sh 
+```
+or
+```bash
+./run.sh
+```
+
+All files will get saved to the current directory where yt.py file
+
+
 ### Input youtube playlist vedio url
 ```bash
 Download YouTube playlist? (yes or no, y/n) =  y
