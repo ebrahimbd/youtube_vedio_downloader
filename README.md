@@ -20,15 +20,8 @@ pip install -r requirements.txt
 
 ## or
 ```bash
-pip install alive-progress==1.0
+pip install alive_progress==1.0  pathvalidate==2.5.1   pyfiglet==0.7  pytube==12.1.0  termcolor==1.1.0
 ```
-```bash
-pip install termcolor
-```
-```bash
-pip install pyfiglet==0.7
-```
-
 
 ## Usage
 
@@ -48,7 +41,7 @@ or
 All files will get saved to the current directory where yt.py file
 
 
-### Input youtube playlist vedio url
+### Execute python script then Input youtube playlist vedio url
 ```bash
 Download YouTube playlist? (yes or no, y/n) =  y
 Enter YouTube Playlist URL: https://www.youtubeerror_call.com/playlist?list=PLauivoElc3gimdmLcIIpafEkzGs4tCQmi
