@@ -1,13 +1,24 @@
 #  pipreqs  --force
 
 import os
+import json
 from pickle import TRUE
+import tty
 from alive_progress import alive_bar
 from pytube import Playlist, YouTube
 from termcolor import colored
 from pyfiglet import *
 from pathvalidate import  replace_symbol, sanitize_filename
  
+
+i = 0
+error_call=0
+link=""
+is_single_vedio=False
+is_playlist=False
+is_error_vedio=False
+
+
 # Here is some valid colors that we can use to color our art
 # valid_color = ('red', 'green', 'yellow', 'blue', 'cyan', 'white')
 
@@ -31,6 +42,65 @@ def copyright():
 # fuchsia = '\033[38;2;255;00;255m'   #  color as hex #FF00FF
 
 
+def temp_file_delete():
+    openfile = open('temp', 'r')
+    temp =  json.load(openfile)
+    msg="Totall  Vedio    = {} ".format(temp['Totall_vedio'])
+    msg1="Totall downloads = {} ".format(temp['download'])
+    print(colored(msg, 'yellow'))
+    print(colored(msg1, 'green'))
+    print(colored("------------------", 'blue'))
+    print(colored("      incomplete = {}\n".format(abs(temp['Totall_vedio']-temp['download'])), 'red'))
+    os.remove('temp')
+
+
+if(os.path.exists('temp')):
+    openfile = open('temp', 'r')
+    temp =  json.load(openfile)
+    print(colored("looking for incomplete downloads directory \n", 'red'))
+    msg="Totall  Vedio    = {} ".format(temp['Totall_vedio'])
+    msg1="Totall downloads = {} ".format(temp['download'])
+    print(colored(msg, 'yellow'))
+    print(colored(msg1, 'green'))
+    print(colored("------------------", 'blue'))
+    print(colored("      incomplete = {}\n".format(abs(temp['Totall_vedio']-temp['download'])), 'red'))
+    link = temp['Youtube_link']
+    if temp['is_playlist']:
+        is_playlist=True
+    else:
+        is_single_vedio=True
+
+else:
+    while i < 2:
+        colored_ascii= colored("Download YouTube playlist? (yes or no, y/n) =", 'green')
+        answer = input(colored_ascii)
+        if any(answer.lower() == f for f in ["yes", 'y',]):
+            is_playlist=True
+            colored_ascii= colored("Enter a Valid YouTube Playlist URL: ", 'green')
+            link = input(colored_ascii)
+            break
+        elif any(answer.lower() == f for f in ['no', 'n',]):
+            colored_ascii= colored("Enter a Valid YouTube vedio URL: ", 'green')
+            link = input(colored_ascii)
+            is_single_vedio=True
+            break
+        else:
+            i += 1
+            if i < 2:
+                print('Please enter yes or no')
+            else:
+                colored_ascii= colored("Download YouTube playlist? (yes or no, y/n) =", 'red')
+                print(colored_ascii)
+
+
+def create_link(totall,download, is_playlist, link):
+    f=open("temp", "w")
+    context={"Totall_vedio":totall,"download":download, "is_playlist":is_playlist, "Youtube_link":link}
+    json_object = json.dumps(context, indent=4)
+    f.write(json_object)
+    f.close()
+
+
 def create_file(name, yt_playlist):
     print(yt_playlist.title)
     try:
@@ -38,35 +108,6 @@ def create_file(name, yt_playlist):
         os.mkdir(valid_name)
     except FileExistsError:
         pass
-
-i = 0
-error_call=0
-link=""
-is_single_vedio=False
-is_playlist=False
-is_error_vedio=False
-
-
-while i < 2:
-    colored_ascii= colored("Download YouTube playlist? (yes or no, y/n) =", 'green')
-    answer = input(colored_ascii)
-    if any(answer.lower() == f for f in ["yes", 'y',]):
-        is_playlist=True
-        colored_ascii= colored("Enter a Valid YouTube Playlist URL: ", 'green')
-        link = input(colored_ascii)
-        break
-    elif any(answer.lower() == f for f in ['no', 'n',]):
-        colored_ascii= colored("Enter a Valid YouTube vedio URL: ", 'green')
-        link = input(colored_ascii)
-        is_single_vedio=True
-        break
-    else:
-        i += 1
-        if i < 2:
-            print('Please enter yes or no')
-        else:
-            colored_ascii= colored("Download YouTube playlist? (yes or no, y/n) =", 'red')
-            print(colored_ascii)
 
 
 def single_vedio():
@@ -76,13 +117,14 @@ def single_vedio():
         video= YouTube(link)
         video_get= YouTube(link).streams.get_highest_resolution()
         print("\nPlease Wait Download Will Start Shortly .........") 
-        # video_get= YouTube(link).streams.filter(adaptive=True, file_extension='mp4').order_by('resolution').desc().first()
+        create_link(1, 0, False, link)
         with alive_bar(bar='blocks', spinner='pulse') as bar: 
             print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
             video_get.download()
-            # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
             bar()
+            create_link(1, 1, False, link)
         print("\n Videos are downloaded.✅")
+        temp_file_delete()
         copyright()
     except:
         is_error_vedio=True
@@ -97,15 +139,20 @@ def playlist_vedio():
         print("\nPlease Wait Download Will Start Shortly .........") 
         valid_name=sanitize_filename(yt_playlist.title)
         create_file(valid_name, yt_playlist)
+        print(len(yt_playlist.videos))
+        create_link(len(yt_playlist.videos), 0, True, link)
+        tt=0
         for video in yt_playlist.videos:
+            tt=tt+1
             with alive_bar(bar='blocks', spinner='waves3') as bar: 
                     print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
                     # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
-                    # down=video.streams.filter(adaptive=True, file_extension='mp4').order_by('resolution').desc().first()
-                    down=video.streams.get_highest_resolution()
+                    down=video.streams.get_lowest_resolution()
                     down.download(valid_name)
+                    create_link(len(yt_playlist.videos), tt, True, link)
                     bar()
         print("\nAll videos are downloaded.✅")
+        temp_file_delete()
         copyright()
     except:
         is_error_vedio=True
