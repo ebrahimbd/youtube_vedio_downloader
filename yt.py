@@ -147,7 +147,7 @@ def playlist_vedio():
             with alive_bar(bar='blocks', spinner='waves3') as bar: 
                     print(f'\n' + 'Downloaded : ',video.title, '~ viewed', video.views, 'times.', )
                     # video.streams.get_highest_resolution().download("/mnt/Ebrahim/tutorial/playlist_download")
-                    down=video.streams.get_lowest_resolution()
+                    down=video.streams.get_highest_resolution()
                     down.download(valid_name)
                     create_link(len(yt_playlist.videos), tt, True, link)
                     bar()
